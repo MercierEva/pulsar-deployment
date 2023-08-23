@@ -17,6 +17,7 @@
       vars:
         condor_role: central-manager
         condor_copy_template: false
+        condor_password: "{{ condor_pass }}"
     - usegalaxy-eu.bashrc
 
 

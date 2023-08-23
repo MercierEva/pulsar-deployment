@@ -32,8 +32,8 @@ variable "gpu_node_count" {
 variable "image" {
   type = map
   default = {
-    "name"             = "vggp-v60-j334-00829423b35b-dev"
-    "image_source_url" = "https://usegalaxy.eu/static/vgcn/vggp-v60-j334-00829423b35b-dev.raw"
+    "name"             = "vggp-v60-j340-e3937ea797ed-dev"
+    "image_source_url" = "https://usegalaxy.eu/static/vgcn/vggp-v60-j340-e3937ea797ed-dev.raw"
     // you can check for the latest image on https://usegalaxy.eu/static/vgcn/ and replace this
     "container_format" = "bare"
     "disk_format"      = "raw"
@@ -55,7 +55,7 @@ variable "public_key" {
   type = map
   default = {
     name   = "id_rsa_pulsar_cloud"
-    pubkey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCMIjTJdmXZ0lsVTPP3Q1OjBbQ3x1gHOt5jW478wmzUO1e1oSOT953am7cB1kk6HUw3n7TGhlRSQ0aHjWeWLlqw5140hgdZY88f+ZolVDHUnthee44F0ZeLGO7gN/lLGtx7ixc7CQXqGV3SPlI6mqX+kg8I1FfSCPQQAvxAQ2bbZVgNOAO9N0B/isM37LYTkzve5x+dATi5acKfC8XOmV0VV3sZ6B/jXuJOVSOpVq0Uma09iHaiJAgzB4wjEjygzKCE47lNVsr0rgoa8my+K+Edm0R6Dsy1mSJhzhxXSCa0x4devBEc8+BgUWykRjvvubCWd1Ktv9nUksSG4RVDPQRIfIOXM+57eDg5EbRp/RT3PL71jU6ABqez8nWlVTWe4Xsun82bG0MDGnrR06RSScA77bMJBvp2i+PghhgKs6NPg8o0xjob0BA8jI2WXT9Nw0uHUWtPzUksDOj3F0eT3LZakmTfuFyxygvWb+MuTWC74PJfQgF/NfDOpwqKt/baoFMy6Vv9gQA7vN0crBe+TImDEIna07ZGUOS0Bc87l1msZR04ZpCPQw4sJtkRA7d72GHtJhxUW9nLRftlG4ewHaax6iqPkLGLYXtVWPS5S4FhszT90pR+rfoiMbvo0pcYEbJV/MhLGv8LHWANndoSlZ3D0PTrU84e4YEwlsP/94WQfQ== evmercie@ptb-5cg3115p9n.irisa.fr"
+    pubkey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDj4wW7PwB5u/XoTocbIGBXFG8PT6pfOp9MvtR55uhg7Vz+Kqdam+csQdID8seBbgAlbQ8UkxOlU6AlRROFk2BCj7aoBUL1J8qR8VN23dSgvoUjFTgAIkSRFb2D4j56u4DICkxnLQUX1TLiz1ZOCniaoqxtR8bsXrFteZMA4mpQdZYWv2/eN+iNdtmAAwKnsSssA2S4qLQXM82y/P9yvE6Olq261yoSJLpb9ml4qAEvA9SfjFCJc+PYsPHwYnaMn4lYup4WuliB2We6PD0o/rzJ53xraIYPomt8l9mf/viXQC4fu2m+r4O0pX3dkf1FaPp3q9HrU9WzeUbbrlhiQWQ/ Generated-by-Nova"
   }
 }
 
@@ -103,11 +103,11 @@ variable "ssh-port" {
 
 //set these variables during execution terraform apply -var "pvt_key=<~/.ssh/my_private_key>" -var "condor_pass=<MyCondorPassword>"
 variable "pvt_key" {
-  default = "~/.ssh/id_rsa_pulsar_cloud"
+  default = "~/.ssh/id_rsa_pulsar_cloud.pem"
 }
 
 variable "condor_pass" {
-  default = "wgpjPqIUXelFTao5"
+  default = ""
 }
 
 variable "mq_string" {
