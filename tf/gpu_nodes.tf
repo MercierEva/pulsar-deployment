@@ -2,13 +2,13 @@ resource "openstack_compute_instance_v2" "gpu-node" {
 
   count           = "${var.gpu_node_count}"
   name            = "${var.name_prefix}gpu-node-${count.index}${var.name_suffix}"
-  flavor_name     = "${var.flavors["gpu-node"]}"
+  flavor_name     = "${var.flavors_exec_gpu_nodes}"
   image_id        = "${data.openstack_images_image_v2.vgcn-image-gpu.id}"
-  key_pair        = "${openstack_compute_keypair_v2.my-cloud-key.name}"
+  key_pair        = "${data.openstack_compute_keypair_v2.my-cloud-key.name}"
   security_groups = "${var.secgroups}"
 
   network {
-    uuid = "${data.openstack_networking_network_v2.internal.id}"
+    uuid = "${data.openstack_networking_network_v2.external.id}"
   }
 
   user_data = <<-EOF
@@ -75,7 +75,7 @@ resource "openstack_compute_instance_v2" "gpu-node" {
               vars:
                 condor_role: execute
                 condor_copy_template: false
-                condor_host: ${openstack_compute_instance_v2.central-manager.network.1.fixed_ip_v4}
+                condor_host: ${openstack_compute_instance_v2.central-manager.network.0.fixed_ip_v4}
                 condor_password: ${var.condor_pass}
 
       owner: centos:centos
@@ -89,6 +89,7 @@ resource "openstack_compute_instance_v2" "gpu-node" {
       - systemctl restart telegraf
       - [ python3, -m, pip, install, ansible ]
       - [ ansible-galaxy, install, -p, /home/centos/roles, usegalaxy_eu.htcondor ]
+      - systemctl start firewalld
       - [ ansible-playbook, -i, 'localhost,', /home/centos/condor.yml]
       - systemctl start condor
   EOF

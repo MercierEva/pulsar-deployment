@@ -2,14 +2,13 @@ resource "openstack_compute_instance_v2" "exec-node" {
 
   count           = "${var.exec_node_count}"
   name            = "${var.name_prefix}exec-node-${count.index}${var.name_suffix}"
-  flavor_name     = "${var.flavors["exec-node"]}"
+  flavor_name     = "${var.flavors_exec_nodes[count.index]}"
   image_id        = "${data.openstack_images_image_v2.vgcn-image.id}"
-  key_pair        = "${openstack_compute_keypair_v2.my-cloud-key.name}"
+  key_pair        = "${data.openstack_compute_keypair_v2.my-cloud-key.name}"
   security_groups = "${var.secgroups}"
 
-
   network {
-    uuid = "${data.openstack_networking_network_v2.internal.id}"
+    uuid = "${data.openstack_networking_network_v2.external.id}"
   }
 
   user_data = <<-EOF
@@ -66,20 +65,15 @@ resource "openstack_compute_instance_v2" "exec-node" {
         ---
         - name: Install HTCondor Central Manager on Pulsar
           become: yes
-          hosts: all
+          hosts: all  
           connection: local
           roles:
             - name: usegalaxy_eu.htcondor
               vars:
                 condor_role: execute
                 condor_copy_template: false
-                condor_host: ${openstack_compute_instance_v2.central-manager.network.1.fixed_ip_v4}
+                condor_host: ${openstack_compute_instance_v2.central-manager.network.0.fixed_ip_v4}
                 condor_password: ${var.condor_pass}
-          tasks:
-            - name: Disable pulsar
-              systemd:
-                name: pulsar
-                state: stopped 
 
       owner: centos:centos
       path: /home/centos/condor.yml
@@ -92,6 +86,7 @@ resource "openstack_compute_instance_v2" "exec-node" {
       - systemctl restart telegraf
       - [ python3, -m, pip, install, ansible ]
       - [ ansible-galaxy, install, -p, /home/centos/roles, usegalaxy_eu.htcondor ]
+      - systemctl start firewalld
       - [ ansible-playbook, -i, 'localhost,', /home/centos/condor.yml]
       - systemctl start condor
       EOF

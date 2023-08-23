@@ -2,7 +2,8 @@
 - name: Install HTCondor Central Manager on Pulsar
   become: yes
   hosts: all
-
+  vars_files:
+    - group_vars/secret_vars.yml
   handlers:
     - name: restart pulsar
       become: yes
@@ -18,11 +19,7 @@
         condor_copy_template: false
     - usegalaxy-eu.bashrc
 
-  pre_tasks:
-    - name: Restart autofs
-      ansible.builtin.systemd:
-        name: autofs.service
-        state: restarted
+
   tasks:
     - name: import cron tasks
       include_tasks: cron.yml

@@ -3,25 +3,23 @@ resource "openstack_compute_instance_v2" "central-manager" {
   name            = "${var.name_prefix}central-manager${var.name_suffix}"
   flavor_name     = "${var.flavors["central-manager"]}"
   image_id        = "${data.openstack_images_image_v2.vgcn-image.id}"
-  key_pair        = "${openstack_compute_keypair_v2.my-cloud-key.name}"
+  key_pair        = "${data.openstack_compute_keypair_v2.my-cloud-key.name}"
   security_groups = "${var.secgroups_cm}"
 
   network {
     uuid = "${data.openstack_networking_network_v2.external.id}"
   }
-  network {
-    uuid = "${data.openstack_networking_network_v2.internal.id}"
-  }
   
   provisioner "local-exec" {
     command = <<-EOF
-      ansible-galaxy install -p ansible/roles usegalaxy_eu.htcondor
+      if [ ! -d ansible/roles/usegalaxy_eu.htcondor/ ];then \
+        ansible-galaxy install -p ansible/roles usegalaxy_eu.htcondor; \
+      fi;
+      sed -i -e "s/Hostname [0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/Hostname ${self.access_ip_v4}/g" ansible/config.cfg; \
       sleep 60
-        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos -b -i '${self.access_ip_v4},' \
-        --private-key ${var.pvt_key} --extra-vars='condor_ip_range=${var.private_network.cidr4}
-        condor_host=${self.network.1.fixed_ip_v4} condor_password=${var.condor_pass}
-        message_queue_url="${var.mq_string}"' \
-        ansible/main.yml
+        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos -b -i ansible/inventory \
+        --private-key ${var.pvt_key} --extra-vars='condor_ip_range=${var.public_network.cidr4} \
+        condor_host=${self.network.0.fixed_ip_v4}' ansible/main.yml
     EOF
   }
 
@@ -82,6 +80,6 @@ resource "openstack_compute_instance_v2" "central-manager" {
       - [ automount ]
       - [ sh, -xc, "sed -i 's|nameserver 10.0.2.3||g' /etc/resolv.conf" ]
       - [ sh, -xc, "sed -i 's|localhost.localdomain|$(hostname -f)|g' /etc/telegraf/telegraf.conf" ]
-      - systemctl restart telegraf
+      - sudo systemctl restart telegraf
   EOF
 }

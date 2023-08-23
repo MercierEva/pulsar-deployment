@@ -1,0 +1,4 @@
+[pulsar]
+pulsar_host
+[pulsar:vars]
+ansible_ssh_common_args='-F ansible/config.cfg'
