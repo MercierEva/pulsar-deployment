@@ -54,7 +54,7 @@ condor_enforce_role: false
 
 #condor_host: 
 
-#condor_password:
+#condor_password
 
 condor_copy_template: true
 
