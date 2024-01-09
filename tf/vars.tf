@@ -32,8 +32,8 @@ variable "gpu_node_count" {
 variable "image" {
   type = map
   default = {
-    "name"             = "vggp-v60-j334-00829423b35b-dev"
-    "image_source_url" = "https://usegalaxy.eu/static/vgcn/vggp-v60-j334-00829423b35b-dev.raw"
+    "name"             = "vggp-v60-j340-e3937ea797ed-dev"
+    "image_source_url" = "https://usegalaxy.eu/static/vgcn/vggp-v60-j340-e3937ea797ed-dev.raw"
     // you can check for the latest image on https://usegalaxy.eu/static/vgcn/ and replace this
     "container_format" = "bare"
     "disk_format"      = "raw"
@@ -103,11 +103,11 @@ variable "ssh-port" {
 
 //set these variables during execution terraform apply -var "pvt_key=<~/.ssh/my_private_key>" -var "condor_pass=<MyCondorPassword>"
 variable "pvt_key" {
-  default = "~/.ssh/id_rsa_pulsar_cloud"
+  default = "~/.ssh/id_rsa_pulsar_cloud.pem"
 }
 
 variable "condor_pass" {
-  default = "wgpjPqIUXelFTao5"
+  default = ""
 }
 
 variable "mq_string" {

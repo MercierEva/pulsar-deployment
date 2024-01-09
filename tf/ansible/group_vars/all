@@ -6,7 +6,8 @@ pulsar_container_image_cache_path: "{{ pulsar_data_path }}/var/database/containe
 pulsar_virtualenv_command: "python -m venv"
 pulsar_root: /opt/pulsar
 
-message_queue_url:
+message_queue_url: "{{ mq_string }}"
+condor_password: "{{ condor_pass }}"
 
 copy_metrics_plugins: false
 metrics_plugins_to_copy:

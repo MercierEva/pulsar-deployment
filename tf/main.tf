@@ -18,8 +18,8 @@ resource "openstack_compute_instance_v2" "central-manager" {
       sed -i -e "s/Hostname [0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/Hostname ${self.access_ip_v4}/g" ansible/config.cfg; \
       sleep 60
         ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos -b -i ansible/inventory \
-        --private-key ${var.pvt_key} --extra-vars='condor_ip_range=${var.public_network.cidr4} \
-        condor_host=${self.network.0.fixed_ip_v4}' ansible/main.yml
+        --extra-vars='condor_ip_range=${var.public_network.cidr4} \
+        condor_host=${self.network.0.fixed_ip_v4} condor_password=${var.condor_pass}' ansible/main.yml
     EOF
   }
 
