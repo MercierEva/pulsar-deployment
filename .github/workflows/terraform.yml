@@ -108,6 +108,9 @@ jobs:
     - name: Terraform Init
       run: terraform init -backend-config="password=${{ secrets.GITHUB_TOKEN }}"
 
+    - name: Terraform Destroy
+      run: terraform destroy
+
     - name: Terraform Validate
       run: terraform validate
 
